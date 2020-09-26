@@ -70,14 +70,18 @@ class _HomePageState extends State<HomePage> {
 
     _lecturaDeQR(BuildContext context) async {
  
-      dynamic futureString ='https://fernando-herrera.com';
+      dynamic futureString;
+
+      try {
+        futureString = await BarcodeScanner.scan();
+      } catch(e) {
+        futureString = e.toString();
+      }
   
       if (futureString != null) {
         final scan = ScanModel(valor: futureString);
         scansBloc.agregarScan(scan);
 
-        final scan2 = ScanModel(valor: 'geo:-34.6035097,-58.4646116');
-        scansBloc.agregarScan(scan2);
         if(Platform.isIOS) {
           Future.delayed(Duration(milliseconds: 750), () {
             utils.abrirScan(context, scan);
