@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:qr_scanner/src/models/scan_model.dart';
 import 'package:flutter_map/flutter_map.dart';
 
-class MapaPage extends StatelessWidget {
+class MapaPage extends StatefulWidget {
   
-  final MapController map = new MapController();
+  @override
+  _MapaPageState createState() => _MapaPageState();
+}
+
+class _MapaPageState extends State<MapaPage> {
+  final map = new MapController();
+
+  String tipoMapa = 'mapbox/streets-v11';
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +31,7 @@ class MapaPage extends StatelessWidget {
         ],
       ),
       body: _armadoMapa(scan),
+      floatingActionButton: _crearBotonFlotante(context),
     );
   }
 
@@ -50,7 +58,14 @@ class MapaPage extends StatelessWidget {
                      '{id}/tiles/{z}/{x}/{y}@2x?access_token={accessToken}',
         additionalOptions: {
         'accessToken':'pk.eyJ1IjoiYW1hY2lhZGVscmlvIiwiYSI6ImNrYm9nbGdkYTIyNmwyd215eTJhdGIwZncifQ.gfH21PNCkT9wB9d3GIz91g',
-        'id': 'mapbox/streets-v11'
+        'id': '$tipoMapa'
+        /* 
+            mapbox/streets-v11,
+            mapbox/light-v10,
+            mapbox/dark-v10,
+            mapbox/outdoors-v11,
+            mapbox/satellite-v9
+        */
         }
     );
   }
@@ -71,6 +86,35 @@ class MapaPage extends StatelessWidget {
           )
         )
       ]
+    );
+  }
+
+  Widget _crearBotonFlotante(BuildContext context) {
+    return FloatingActionButton(
+
+      child: Icon(Icons.repeat),
+      backgroundColor: Theme.of(context).primaryColor,
+      onPressed: (){
+        if(tipoMapa == 'mapbox/streets-v11') {
+          tipoMapa = 'mapbox/dark-v10';
+        }
+        else if(tipoMapa== 'mapbox/dark-v10'){
+          tipoMapa = 'mapbox/light-v10';
+        }
+        else if(tipoMapa == 'mapbox/light-v10'){
+          tipoMapa = 'mapbox/outdoors-v11';
+        }
+        else if(tipoMapa == 'mapbox/outdoors-v11') {
+          tipoMapa = 'mapbox/satellite-v9';
+        }
+        else {
+          tipoMapa = 'mapbox/streets-v11';
+        }
+
+        setState(() {
+          
+        });
+      },
     );
   }
 }
